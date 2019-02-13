@@ -1,0 +1,57 @@
+<style>
+.grid-container {
+    display: grid;
+    grid-template-columns: 15% 15% 15%;
+    grid-template-rows: auto auto auto;
+    grid-gap: 1px;
+    /* margin-left: 1.25%;
+    margin-right: 1.25%;
+    margin-top: 10%; */
+    /* background-color: beige; */
+    float: center;
+    /* top: 20%; */
+    position: relative;
+  }
+  
+  .grid-container > div {
+    /* background-color: beige; */
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
+    font-size: 20px;
+    width: 100%;
+    outline: 1px solid black;
+    float: center;
+  }
+</style>
+
+
+
+    <div class="grid-container" style="grid-auto-flow: row;">
+        {% for char in game_state %}
+        <div class="{{char.index}}">
+            <form action="/gamepage" method="post">
+                {% if char in ['X','O'] %}
+                    <p>{{char}}</p>
+                {% endif %}
+                {% if char not in ['X','O'] and user_turn == "Yes" %}
+                    <input name="button" type="submit" value="Play {{user_token}} here" style="-ms-grid-row-align: center; -ms-grid-column-align: center">
+                    <input name="next_state" style="visibility: hidden;" value="{{new_states[char]}}">
+                {% endif %}
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+
+
+
+<!-- <form action="/gamepage" method="post">
+    {% if user_turn == "Yes" %}
+        <input name="button" class="button" type="submit" value="Increment turn by 1">
+        <input name="next_state" style="visibility: hidden;" value={{new_state}}>
+    {% endif %}
+    <p>Turn number: {{state}}</p>
+</form> -->
