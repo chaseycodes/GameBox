@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+// change by serdar
 
 const games = [
     { id: 1, name: 'chess' },
