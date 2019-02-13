@@ -2,7 +2,7 @@ from flask import Flask,redirect,render_template,request,session,url_for, jsonif
 
 
 app = Flask(__name__)
-app.secret_key = 'very secret12'
+app.secret_key = 'very secret123'
 
 
 def horizontal_win_check(new_state, user_token):
