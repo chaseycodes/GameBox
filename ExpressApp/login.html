@@ -8,8 +8,9 @@
   width: 7%;
   overflow: auto;
   margin: auto;
-  position: fixed;
+  position: absolute;
   margin-left: 60.3%;
+  margin-top: 17.3%;
   top: 0; left: 0; bottom: 0; right: 0;
   }
 
@@ -18,13 +19,21 @@
     overflow: auto;
     margin: auto;
     position: absolute;
+    margin-top: 14%;
     top: 0; left: 0; bottom: 0; right: 0;
 
   }
 
-  .Button-align {
-    margin-left: 47%;
-    margin-top: 31%;
+  .Button-align-log {
+    margin-left: 46%;
+    margin-top: 25%;
+    position: absolute;
+  }
+
+  .Button-align-reg {
+    margin-left: 51%;
+    margin-top: 25%;
+    position: absolute;
   }
 
   @keyframes App-logo-spin {
@@ -37,7 +46,11 @@
   }
 </style>  
 <style>
-body {font-family: Arial, Helvetica, sans-serif;}
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: url("/background.jpg") no-repeat fixed;
+
+}
 
 /* Full-width input fields */
 input[type=text], input[type=password] {
@@ -164,6 +177,14 @@ span.psw {
 </style>
 </head>
 <body>
+<body>
+<div class="count-particles">
+    <span class="js-count-particles">--</span> particles
+</div>
+      
+<div id="particles-js"></div>
+      
+
 <div>
   <img src="gamebox.png" class="Logo-logo" alt="logo" />
 </div>
@@ -171,7 +192,8 @@ span.psw {
   <img src="/testimage.png" class="App-logo" alt="logo" />
 </div>
 <div>
-  <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;" class="Button-align">Login</button>
+  <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;" class="Button-align-log">Login</button>
+  <button onclick="document.getElementById('id02').style.display='block'" style="width:auto;" class="Button-align-reg">Register</button>
 </div>
 
 <div id="id01" class="modal">
@@ -193,6 +215,7 @@ span.psw {
     </div>
   </form>
 </div>
+</body>
 
 <script>
 // Get the modal
@@ -205,6 +228,7 @@ window.onclick = function(event) {
     }
 }
 </script>
+
 
 </body>
 </html>
