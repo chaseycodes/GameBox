@@ -20,8 +20,8 @@ app.get('/', (req, res)=>{
 })
 
 app.post('/', (req, res)=>{
-    var username = req.body.uname
-    var password = req.body.psw
+    var username = req.body.username
+    var password = req.body.password
 
     console.log(username)
     console.log(password)
