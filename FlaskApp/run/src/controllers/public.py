@@ -1,7 +1,6 @@
 import json
 import requests
-from flask import jsonify
-from flask import Blueprint,redirect,render_template,request,session,url_for
+from flask import Blueprint,redirect,render_template,request,session,url_for,jsonify
 from sqlite3 import IntegrityError
 
 
