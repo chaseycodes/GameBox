@@ -3,6 +3,7 @@ var app = require('express')()
 var http = require('http').Server(app)
 var io = require('socket.io')(http)
 const bodyParser = require('body-parser');
+var request = require('request-promise');
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -17,6 +18,29 @@ const games = [
 app.get('/', (req, res)=>{
     res.sendFile(__dirname+"/login.html")
 })
+
+//get login info from flask side
+app.post('/login', async function (req, res) {
+    var options = {
+        method: 'GET',
+        uri: 'http://127.0.0.1:5000/',
+        body:req.body,
+        json: true // Automatically stringifies the body to JSON
+    };
+    console.log(req.body)
+
+    var returndata;
+    var recieverequest = await request(options)
+    .then(function (parsedBody) {
+        console.log(parsedBody.user_info); // parsedBody contains the data sent back from the Flask server
+        returndata = parsedBody.user_info; // do something with this data, here I'm assigning it to a variable.
+    })
+    .catch(function (err) {
+        console.log(err);
+    });
+    
+    res.send(returndata);
+});
 
 app.post('/', (req, res)=>{
     var username = req.body.uname
