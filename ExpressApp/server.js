@@ -19,7 +19,7 @@ const games = [
 
 //Render index at root '/'
 app.get('/', (req, res)=>{
-    res.render('index', { title: 'Hey', message: 'Hello there!' })
+    res.render('index')
 })
 
 //get login info from flask side
@@ -35,14 +35,22 @@ app.post('/login', async function (req, res) {
     var returndata;
     var recieverequest = await request(options)
     .then(function (parsedBody) {
-        console.log(parsedBody.user_info); // parsedBody contains the data sent back from the Flask server
+        //console.log(parsedBody.user_info); // parsedBody contains the data sent back from the Flask server
         returndata = parsedBody.user_info; // do something with this data, here I'm assigning it to a variable.
     })
     .catch(function (err) {
         console.log(err);
     });
     
-    res.send(returndata);
+    if(returndata) {
+        console.log(returndata)
+        res.render('select',returndata)
+
+    } else{
+        res.send('Try again')
+
+    }
+   
 });
 
 //get registration from flask back
@@ -66,6 +74,12 @@ app.post('/register', async function (req, res) {
         console.log(err);
     });
     
+    if(returndata){
+
+    } else{
+
+    }
+
     res.send(returndata);
 });
 
@@ -86,7 +100,7 @@ app.post('/', (req, res)=>{
 })
 
 app.get('/select', (req, res)=>{
-    res.render('select', { title: 'Hey'})
+    res.render('select', {  title: 'Hey' })
 })
 
 app.post('/select', (req, res)=>{
