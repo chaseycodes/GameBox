@@ -19,11 +19,30 @@ app.get('/', (req, res)=>{
 })
 
 app.post('/', (req, res)=>{
-    var username = req.body.uname
-    var password = req.body.psw
+    var usernameLogin = req.body.usernameLogin
+    var passwordLogin = req.body.passwordLogin
+    var usernameRegister = req.body.usernameRegister
+    var passwordRegister= req.body.passwordRegister
+    var email = req.body.email
+    var nickname = req.body.nickname
 
-    console.log(username)
-    console.log(password)
+    console.log(usernameLogin)
+    console.log(passwordLogin)
+    console.log(usernameRegister)
+    console.log(passwordRegister)
+    console.log(email)
+    console.log(nickname)
+})
+
+app.get('/select', (req, res)=>{
+    res.sendFile(__dirname+"/select.html")
+})
+
+app.post('/select', (req, res)=>{
+    res.sendFile(__dirname+"/select.html")
+    var toggleValue = req.body.toggle
+
+    console.log(toggleValue)
 })
 
 app.get('/game', (req, res)=>{
