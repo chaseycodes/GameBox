@@ -30,7 +30,7 @@ app.post('/login', async function (req, res) {
         body:req.body,
         json: true // Automatically stringifies the body to JSON
     };
-    console.log(req.body)
+    //console.log(req.body)
 
     var returndata;
     var recieverequest = await request(options)
@@ -43,11 +43,11 @@ app.post('/login', async function (req, res) {
     });
     
     if(returndata) {
-        console.log(returndata)
+        //console.log(returndata)
         res.render('select',returndata)
 
     } else{
-        res.send('Try again')
+        res.render('index',{message:"Try again!"})
 
     }
    
@@ -67,21 +67,25 @@ app.post('/register', async function (req, res) {
     var returndata;
     var recieverequest = await request(options)
     .then(function (parsedBody) {
-        console.log(parsedBody.status); // parsedBody contains the data sent back from the Flask server
+        //console.log(parsedBody.status); // parsedBody contains the data sent back from the Flask server
         returndata = parsedBody.status; // do something with this data, here I'm assigning it to a variable.
     })
     .catch(function (err) {
         console.log(err);
     });
-    
-    if(returndata){
+
+    if(returndata) {
+        //console.log(returndata);
+        var userdata = req.body
+        res.render('select',userdata);
 
     } else{
+        res.send("Try again!!");
 
-    }
-
-    res.send(returndata);
+    };
 });
+
+
 
 app.post('/', (req, res)=>{
     var usernameLogin = req.body.usernameLogin
