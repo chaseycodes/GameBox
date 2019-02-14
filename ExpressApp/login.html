@@ -25,7 +25,7 @@
   }
 
   .Button-align-log {
-    margin-left: 46%;
+    margin-left: 44%;
     margin-top: 25%;
     position: absolute;
   }
@@ -46,11 +46,7 @@
   }
 </style>  
 <style>
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  background: url("/background.jpg") no-repeat fixed;
 
-}
 
 /* Full-width input fields */
 input[type=text], input[type=password] {
@@ -79,6 +75,8 @@ button:hover {
 
 body {
   background-color: black;
+  font-family: Arial, Helvetica, sans-serif;
+  background: url("/background.jpg") no-repeat;
 }
 
 /* Extra styles for the cancel button */
@@ -96,7 +94,7 @@ body {
 }
 
 img.avatar {
-  width: 40%;
+  width: 4%;
   border-radius: 50%;
 }
 
@@ -110,7 +108,21 @@ span.psw {
 }
 
 /* The Modal (background) */
-.modal {
+.modalLogin {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  padding-top: 60px;
+}
+
+.modalRegister {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
@@ -196,37 +208,68 @@ span.psw {
   <button onclick="document.getElementById('id02').style.display='block'" style="width:auto;" class="Button-align-reg">Register</button>
 </div>
 
-<div id="id01" class="modal">
+
+<div id="id01" class="modalLogin">
   
-  <form class="modal-content animate" action="/" method="POST">
+    <form class="modal-content animate" action="/" method="POST">
     <div class="imgcontainer">
       <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-      <img src="img_avatar2.png" alt="Avatar" class="avatar">
+      <img src="bunny.png" alt="Avatar" class="avatar">
     </div>
 
     <div class="container">
-      <label for="uname"><b>Username</b></label>
-      <input type="text" placeholder="Enter Username" name="uname" required>
+      <label for="usernameLogin"><b>Username</b></label>
+      <input type="text" placeholder="Enter Username" name="usernameLogin" required>
 
-      <label for="psw"><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="psw" required>
+      <label for="passwordLogin"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="passwordLogin" required>
         
       <button type="submit">Login</button>
     </div>
   </form>
 </div>
+
+<div id="id02" class="modalRegister">
+  <!-- //'username', 'password', 'email', and 'display_name' -->
+  <form class="modal-content animate" action="/" method="POST">
+      <div class="imgcontainer">
+        <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal">&times;</span>
+        <img src="turtle.png" alt="Avatar" class="avatar">
+      </div>
+  
+      <div class="container">
+        <label for="usernameRegister"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="usernameRegister" required>
+  
+        <label for="passwordRegister"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="passwordRegister" required>
+
+        <label for="email"><b>Email</b></label>
+        <input type="text" placeholder="Enter Email" name="email" required>
+  
+        <label for="nickname"><b>Display Name</b></label>
+        <input type="text" placeholder="Enter Nickname" name="nickname" required>
+          
+        <button type="submit">Register</button>
+      </div>
+  </form>
+</div>
+
+
 </body>
 
 <script>
 // Get the modal
-var modal = document.getElementById('id01');
+var modalLogin = document.getElementById('id01');
+var modalRegister = document.getElementById('id02');
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
-    if (event.target == modal) {
+    if ((event.target == modalLogin) || (event.target == modalRegister)) {
         modal.style.display = "none";
     }
-}
+  }
+
 </script>
 
 
