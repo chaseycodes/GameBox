@@ -1,3 +1,6 @@
+import json
+import requests
+from flask import jsonify
 from flask import Blueprint,redirect,render_template,request,session,url_for
 from sqlite3 import IntegrityError
 
@@ -12,6 +15,7 @@ def frontpage():
     if request.method == 'GET':
         # receive json with keys 'username' and 'password' based on input
         user_credentials = request.get_json()
+        print(user_credentials)
         user = User(username=user_credentials['username'], 
                     password=user_credentials['password'])
         # if credentials are correct, return full user info
