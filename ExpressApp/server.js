@@ -39,10 +39,14 @@ app.get('/select', (req, res)=>{
 })
 
 app.post('/select', (req, res)=>{
-    res.sendFile(__dirname+"/select.html")
-    var toggleValue = req.body.toggle
+    var toggleValue = req.body.switch
+    var gameName = req.body.game
+
+    if (toggleValue === null) 
 
     console.log(toggleValue)
+    console.log(gameName)
+
 })
 
 app.get('/game', (req, res)=>{
