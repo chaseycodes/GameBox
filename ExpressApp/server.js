@@ -8,6 +8,9 @@ var request = require('request-promise');
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.set('views', './views')
+app.set('view engine', 'pug')
+
 const games = [
     { id: 1, name: 'chess' },
     { id: 2, name: 'tic-tac-toe' },
@@ -16,7 +19,7 @@ const games = [
 
 //Render index at root '/'
 app.get('/', (req, res)=>{
-    res.sendFile(__dirname+"/login.html")
+    res.render('index', { title: 'Hey', message: 'Hello there!' })
 })
 
 //get login info from flask side
@@ -83,15 +86,13 @@ app.post('/', (req, res)=>{
 })
 
 app.get('/select', (req, res)=>{
-    res.sendFile(__dirname+"/select.html")
+    res.render('select', { title: 'Hey'})
 })
 
 app.post('/select', (req, res)=>{
     var toggleValue = req.body.switch
     var gameName = req.body.game
-
-    if (toggleValue === null) 
-
+    console.log(req.body)
     console.log(toggleValue)
     console.log(gameName)
 
