@@ -2,7 +2,7 @@ import json
 import requests
 
 
-from flask import Blueprint,redirect,render_template,request,session,url_for
+from flask import Blueprint,redirect,render_template,request,session,url_for,jsonify
 
 
 from ..models.model import *
