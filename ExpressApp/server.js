@@ -77,7 +77,7 @@ app.post('/register', async function (req, res) {
     if(returndata) {
         //console.log(returndata);
         var userdata = req.body
-        res.render('select',userdata);
+        res.render('index');
 
     } else{
         res.send("Try again!!");
