@@ -42,6 +42,30 @@ app.post('/login', async function (req, res) {
     res.send(returndata);
 });
 
+//get registration from flask back
+app.post('/register', async function (req, res) {
+    var options = {
+        method: 'POST',
+        uri: 'http://127.0.0.1:5000/registration',
+        body:req.body,
+        json: true // Automatically stringifies the body to JSON
+    };
+
+    console.log(req.body)
+
+    var returndata;
+    var recieverequest = await request(options)
+    .then(function (parsedBody) {
+        console.log(parsedBody.status); // parsedBody contains the data sent back from the Flask server
+        returndata = parsedBody.status; // do something with this data, here I'm assigning it to a variable.
+    })
+    .catch(function (err) {
+        console.log(err);
+    });
+    
+    res.send(returndata);
+});
+
 app.post('/', (req, res)=>{
     var username = req.body.uname
     var password = req.body.psw
