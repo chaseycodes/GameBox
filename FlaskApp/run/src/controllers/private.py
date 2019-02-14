@@ -53,13 +53,28 @@ def setup():
         return jsonify({'game_id': game_id})
 
 
+@controller.route('/select_continue', methods=['GET','POST'])
+def continue_list():
+    if request.method == 'GET':
+        """receive json with keys game_id and user info :
+        user_info contains a dict with keys 'username', 'pk',
+        'email', and 'display_name'.
+        game_id is the unique id of the game from the available_games table
+        """
+        request = request.get_json()
+        user = User(row=request['user_info'])
+        avlb_game_pk = request['game_id']
+        continue_games = user.get_user_active_instances_of_game(avlb_game_pk)
+        return jsonify({'continue_list':continue_games})
+
+
 @controller.route('/gamepage', methods=['GET','POST'])
 def gamepage():
     if request.method == 'GET':
         """receive json with keys game_id and user info :
         user_info contains a dict with keys 'username', 'pk',
         'email', and 'display_name'.
-        game_id is the unique id of the game from the available_games table
+        game_id is the unique id of the game from the game_records table
         """
         request = request.get_json()
         user = User(row=request['user_info'])
