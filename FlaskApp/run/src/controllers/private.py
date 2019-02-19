@@ -2,7 +2,7 @@ import json
 import requests
 
 
-from flask import Blueprint,redirect,render_template,request,session,url_for
+from flask import Blueprint,redirect,render_template,request,session,url_for,jsonify
 
 
 from ..models.model import *
@@ -53,13 +53,28 @@ def setup():
         return jsonify({'game_id': game_id})
 
 
+@controller.route('/select_continue', methods=['GET','POST'])
+def continue_list():
+    if request.method == 'GET':
+        """receive json with keys game_id and user info :
+        user_info contains a dict with keys 'username', 'pk',
+        'email', and 'display_name'.
+        game_id is the unique id of the game from the available_games table
+        """
+        request = request.get_json()
+        user = User(row=request['user_info'])
+        avlb_game_pk = request['game_id']
+        continue_games = user.get_user_active_instances_of_game(avlb_game_pk)
+        return jsonify({'continue_list':continue_games})
+
+
 @controller.route('/gamepage', methods=['GET','POST'])
 def gamepage():
     if request.method == 'GET':
         """receive json with keys game_id and user info :
         user_info contains a dict with keys 'username', 'pk',
         'email', and 'display_name'.
-        game_id is the unique id of the game from the available_games table
+        game_id is the unique id of the game from the game_records table
         """
         request = request.get_json()
         user = User(row=request['user_info'])
@@ -90,17 +105,24 @@ def gamepage():
         """receive json with keys game_params and user info :
         user_info contains a dict with keys 'username', 'pk',
         'email', and 'display_name'.
-        game_params contains a dict with keys 'game_id' and 'next_state'
+        game_params contains a dict with mandatory keys 'game_id' and
+        'next_state' and optional key 'turn_number'
         game_id is the unique id of the game from the available_games table
         next_state is a string representing the state of the game after the
-        most recent move"""
+        most recent move
+        turn_number is an integer for the turn number
+        """
         request = request.get_json()
         user = User(row=request['user_info'])
         game_pk = user.game_pk_from_id(request['game_params']['game_id'])
         game = GameStatus(pk=game_pk)
         endpoint = game.endpoint
+        turn_number = request.get('turn_number')
         game.game_state = request['game_params']['next_state']
-        game.turn_number += 1
+        if turn_number:
+            game.turn_number = turn_number
+        else:
+            game.turn_number += 1
         # update DB for new info
         game.save()
         # win state will have the string "WIN -" in it

@@ -79,6 +79,16 @@ class User:
             rows = cur.fetchall()
         return [GameStatus(game_row) for game_row in rows]
 
+
+    def get_user_active_instances_of_game(self, avlb_game_pk):
+        """get a list of the user's games that are not finished"""
+        with OpenCursor() as cur:
+            SQL = """ SELECT * FROM game_records WHERE participant_pk = ? AND
+            game_state NOT LIKE 'WIN -%' AND game_pk = ?;"""
+            cur.execute(SQL, (self.pk, avlb_game_pk))
+            rows = cur.fetchall()
+        return [GameStatus(game_row) for game_row in rows]
+
     
     def get_user_finished_games(self):
         """get a list of the user's games that are finished"""
