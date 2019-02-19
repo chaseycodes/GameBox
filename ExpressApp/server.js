@@ -24,6 +24,20 @@ app.get('/', (req, res)=>{
 
 //get login info from flask side
 app.post('/login', async function (req, res) {
+    
+
+    const gameList = { game1: { 
+                            name: 'Zombie-Dice',
+                            img: 'dice.png',
+                            pk: '1'
+                        },
+                        game2: {
+                            name: 'Tic-Tac-Toe',
+                            img: 'tictactoe.png',
+                            pk: '2'
+                        }
+                    }
+
     var options = {
         method: 'GET',
         uri: 'http://127.0.0.1:5000/',
@@ -44,7 +58,8 @@ app.post('/login', async function (req, res) {
     
     if(returndata) {
         //console.log(returndata)
-        res.render('select',returndata)
+        //returndata contains userinfo 
+        res.render('select', { gameList: gameList , returndata: returndata})
 
     } else{
         res.render('index',{message:"Try again!"})
@@ -104,7 +119,7 @@ app.post('/', (req, res)=>{
 })
 
 app.get('/select', (req, res)=>{
-<<<<<<< HEAD
+
 
     const gameList = { game1: { 
                             name: 'Zombie-Dice',
@@ -157,9 +172,9 @@ app.get('/game', (req, res)=>{
 app.post('/start-new', (req, res)=>{
     var usernames = body.req
     console.log(usernames)
-=======
+
     res.render('select', {  title: 'Hey' })
->>>>>>> bfd7bbfb26128e64719f178ba972b6e5cef0068c
+
 })
 
 app.post('/select', (req, res)=>{
