@@ -86,7 +86,58 @@ app.post('/', (req, res)=>{
 })
 
 app.get('/select', (req, res)=>{
-    res.render('select', { title: 'Hey'})
+
+    const gameList = { game1: { 
+                            name: 'Zombie-Dice',
+                            img: 'dice.png',
+                            pk: '1'
+                        },
+                        game2: {
+                            name: 'Tic-Tac-Toe',
+                            img: 'tictactoe.png',
+                            pk: '2'
+                        }
+                    }
+    res.render('select', { gameList: gameList })
+})
+
+app.get('/start-new', (req, res)=>{
+
+    // User initiates a new room and enters user's to connect
+
+    const players = ['player1', 'player2', 'player3']
+    res.render('start_new', { playerList: players }); 
+})
+
+app.get('/continue', (req, res)=>{
+
+    // Continue games from a saved state
+
+    const saveStates = ['State1', 'State2', 'State3']
+
+    const roomInfo = { invite1: {
+                            invitingUser: 'chase', 
+                            gamename: 'tictactoe',
+                            pk: '12' 
+                        },
+                        invite2: {
+                            invitingUser: 'henry', 
+                            gamename: 'zombiedice',
+                            pk: '24'
+                        }
+                    }
+
+    res.render('continue', { saveStates: saveStates, roomInfo: roomInfo  });
+})
+
+app.get('/game', (req, res)=>{
+
+    res.render('game');
+})
+
+app.post('/start-new', (req, res)=>{
+    var usernames = body.req
+    console.log(usernames)
 })
 
 app.post('/select', (req, res)=>{
@@ -98,11 +149,11 @@ app.post('/select', (req, res)=>{
 
 })
 
-app.get('/game', (req, res)=>{
-    res.sendFile(__dirname+"/game.html");
-    //Get HTML CODE FROM FLASK
-    //CREATE RENDER FUNCTION FROM HERE TO HTML
+app.post('/continue', (req, res)=>{
+    var states = req.body
+    console.log(states)
 })
+
 
 app.get('/games', (req, res) =>{
     res.send(games);

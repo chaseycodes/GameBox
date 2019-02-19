@@ -7,7 +7,20 @@ html
       background-color: black;
       font-family: Arial, Helvetica, sans-serif;
       background: url("/background.jpg") no-repeat;
-      color: white
+      }
+      button {
+      display: inline-block;
+      padding: 10;
+      margin: 0;
+      vertical-align: top;
+      }
+      #push {
+        margin-top: 50px;
+      }
+      #close-image img {
+      display: block;
+      height: 200px;
+      padding: 10;
       }
       input[type=checkbox]{
       width: 10px;
@@ -47,21 +60,23 @@ html
   body
     form(method='POST', action='/select')
       div
-        img.center(src='select.png', style='width:50%')
+        center
+          img(src='select.png', style='width:50%')
       div
-        input#switch(type='checkbox', name='switch')
-        label(for='switch') Toggle
+        center
+          img(src='start_new_switch.png', style='width:30%')
       div
-        input(type='radio', name='game', value='1')
-        img(src='dice.png', width='20%')
-        | Do or Dice
-        br
-        input(type='radio', name='game', value='2')
-        img(src='tictactoe.png', width='20%')
-        | TicTacWoah!
-        br
-      button dummyposter
+        center
+          input#switch(type='checkbox', name='switch')
+          label(for='switch')
+      div
+        center
+          #push
+            each val, index in gameList
+              button#close-image(name='Game', value=val['pk'], style="background:transparent; border:none; color:transparent;")
+                img(src=val['img'])
     script.
+      var gameList = !{gameList};
       var toggleValue = document.getElementById('switch');
       toggleValue.addEventListener('click', function(){
       var toggle = document.querySelector("[name=switch]");
