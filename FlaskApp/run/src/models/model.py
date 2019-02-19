@@ -171,26 +171,27 @@ class GameStatus:
         self.turn_order = row.get('turn_order')
         self.turn_number = row.get('turn_number')
         self.endpoint = self.get_avlb_game_info()['endpoint']
+        self.last_move = row.get('last_move')
 
 
     def save(self):
         if self:
             with OpenCursor() as cur:
                 SQL = """ UPDATE game_records SET 
-                          game_state = ?,  turn_number = ?
+                          game_state = ?,  turn_number = ?, last_move = ?
                           WHERE playthrough_id=?; """
-                values = (self.game_state, self.turn_number, 
+                values = (self.game_state, self.turn_number, time(),
                           self.playthrough_id)
                 cur.execute(SQL, values)
         else:
             with OpenCursor() as cur:
                 SQL = """ INSERT INTO game_records (
                           game_pk, playthrough_id, game_state,
-                          participant_pk, turn_order, turn_number)
-                          VALUES (?, ?, ?, ?, ?, ?); """
+                          participant_pk, turn_order, turn_number, last_move)
+                          VALUES (?, ?, ?, ?, ?, ?, ?); """
                 values = (self.game_pk, self.playthrough_id,
                           self.game_state, self.participant_pk, 
-                          self.turn_order, self.turn_number)
+                          self.turn_order, self.turn_number, time())
                 cur.execute(SQL, values)
                 self.pk = cur.lastrowid
 

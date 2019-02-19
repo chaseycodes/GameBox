@@ -28,56 +28,109 @@ def dashboard():
                         'finished_list':fin_game_list})
 
 
-@controller.route('/setup', methods=['GET','POST'])
+@controller.route('/setup', methods=['GET', 'POST'])
 def setup():
     if request.method == 'GET':
-        """receive json with keys game_pk and user info :
-        user_info contains a dict with keys 'username', 'pk',
-        'email', and 'display_name'.
-        game_pk is the pk of the game from the available_games table"""
-        request = request.get_json()
-        user = User(row=request['user_info'])
-        game_params = user.game_start_params(pk=request['game_pk'])
+        # receive json with keys game_pk and user info :
+        # user_info contains a dict with keys 'username', 'pk',
+        # 'email', and 'display_name'.
+        # game_pk is the pk of the game from the available_games table
+        response = request.get_json()
+        user = User(row=response['user_info'])
+        game_params = dict(user.game_start_params(pk=response['game_pk']))
         return jsonify({'game_params': game_params})
     elif request.method == 'POST':
-        """receive json with keys game_params and user info :
-        user_info contains a dict with keys 'username', 'pk',
-        'email', and 'display_name'.
-        game_params contains a dict with keys game_pk and user_list
-        user_list has the pks of all users playing the game"""
-        request = request.get_json()
-        user = User(row=request['user_info'])
-        user_list = request['game_params']['user_list']
-        game_pk = request['game_params']['game_pk']
-        game_id = user.make_game(game_pk, user_list)
+        # receive json with keys game_params and user info :
+        # user_info contains a dict with keys 'username', 'pk',
+        # 'email', and 'display_name'.
+        # game_params contains a dict with keys game_pk and user_list
+        # user_list has the pks of all users playing the game
+        response = request.get_json()
+        user = User(row=response['user_info'])
+        user_list = response['game_params']['user_list']
+        user_pk_list = [user.pk]
+        for username in user_list:
+            if username:
+                player_pk = get_pk_from_username(username)
+                user_pk_list.append(player_pk)
+        game_pk = response['game_params']['game_pk']
+        game_id = user.make_game(game_pk, user_pk_list)
         return jsonify({'game_id': game_id})
 
 
 @controller.route('/select_continue', methods=['GET','POST'])
 def continue_list():
     if request.method == 'GET':
-        """receive json with keys game_id and user info :
-        user_info contains a dict with keys 'username', 'pk',
-        'email', and 'display_name'.
-        game_id is the unique id of the game from the available_games table
-        """
-        request = request.get_json()
-        user = User(row=request['user_info'])
-        avlb_game_pk = request['game_id']
+        # receive json with keys game_id and user info :
+        # user_info contains a dict with keys 'username', 'pk',
+        # 'email', and 'display_name'.
+        # game_pk is the unique id of the game from the available_games table
+        response = request.get_json()
+        user = User(row=response['user_info'])
+        avlb_game_pk = response['game_pk']
         continue_games = user.get_user_active_instances_of_game(avlb_game_pk)
-        return jsonify({'continue_list':continue_games})
+        save_states = []
+        room_info = []
+        for i in range(len(continue_games)):
+            if continue_games[i].game_state == 'START':
+                try:
+                    room_info[i]['pk'] = continue_games[i].pk
+                    room_info[i]['game_pk'] = continue_games[i].game_pk
+                    room_info[i]['playthrough_id'] = continue_games[i].playthrough_id
+                    room_info[i]['game_state'] = continue_games[i].game_state
+                    room_info[i]['participant_pk'] = continue_games[i].participant_pk
+                    room_info[i]['turn_order'] = continue_games[i].turn_order
+                    room_info[i]['turn_number'] = continue_games[i].turn_number
+                    room_info[i]['endpoint'] = continue_games[i].get_avlb_game_info()['endpoint']
+                    room_info[i]['last_move'] = continue_games[i].last_move
+                except IndexError:
+                    room_info.append({})
+                    room_info[i]['pk'] = continue_games[i].pk
+                    room_info[i]['game_pk'] = continue_games[i].game_pk
+                    room_info[i]['playthrough_id'] = continue_games[i].playthrough_id
+                    room_info[i]['game_state'] = continue_games[i].game_state
+                    room_info[i]['participant_pk'] = continue_games[i].participant_pk
+                    room_info[i]['turn_order'] = continue_games[i].turn_order
+                    room_info[i]['turn_number'] = continue_games[i].turn_number
+                    room_info[i]['endpoint'] = continue_games[i].get_avlb_game_info()['endpoint']
+                    room_info[i]['last_move'] = continue_games[i].last_move
+
+            else:
+                try:
+                    save_states[i]['pk'] = continue_games[i].pk
+                    save_states[i]['game_pk'] = continue_games[i].game_pk
+                    save_states[i]['playthrough_id'] = continue_games[i].playthrough_id
+                    save_states[i]['game_state'] = continue_games[i].game_state
+                    save_states[i]['participant_pk'] = continue_games[i].participant_pk
+                    save_states[i]['turn_order'] = continue_games[i].turn_order
+                    save_states[i]['turn_number'] = continue_games[i].turn_number
+                    save_states[i]['endpoint'] = continue_games[i].get_avlb_game_info()['endpoint']
+                    save_states[i]['last_move'] = continue_games[i].last_move
+                except IndexError:
+                    save_states.append({})
+                    save_states[i]['pk'] = continue_games[i].pk
+                    save_states[i]['game_pk'] = continue_games[i].game_pk
+                    save_states[i]['playthrough_id'] = continue_games[i].playthrough_id
+                    save_states[i]['game_state'] = continue_games[i].game_state
+                    save_states[i]['participant_pk'] = continue_games[i].participant_pk
+                    save_states[i]['turn_order'] = continue_games[i].turn_order
+                    save_states[i]['turn_number'] = continue_games[i].turn_number
+                    save_states[i]['endpoint'] = continue_games[i].get_avlb_game_info()['endpoint']
+                    save_states[i]['last_move'] = continue_games[i].last_move
+
+        print(room_info, save_states)
+        return jsonify({'room_info':room_info, 'save_states': save_states})
 
 
 @controller.route('/gamepage', methods=['GET','POST'])
 def gamepage():
     if request.method == 'GET':
-        """receive json with keys game_id and user info :
-        user_info contains a dict with keys 'username', 'pk',
-        'email', and 'display_name'.
-        game_id is the unique id of the game from the game_records table
-        """
-        request = request.get_json()
-        user = User(row=request['user_info'])
+        # receive json with keys game_id and user info :
+        # user_info contains a dict with keys 'username', 'pk',
+        # 'email', and 'display_name'.
+        # game_id is the unique id of the game from the game_records table
+        response = request.get_json()
+        user = User(row=response['user_info'])
         game_pk = user.game_pk_from_id(request['game_id'])
         game = GameStatus(pk=game_pk)
         game_state = game.game_state
@@ -90,7 +143,7 @@ def gamepage():
         else:
             user_turn = "No"
         endpoint = game.endpoint
-        response = requests.get(f"{endpoint}get", 
+        game_response = requests.get(f"{endpoint}get", 
                                     json = {
                                         'state': game_state,
                                         'user_turn': user_turn,
@@ -98,27 +151,26 @@ def gamepage():
                                         'turn_number': turn_number
                                     }
                                 )
-        html_to_pass = response.text
+        html_to_pass = game_response.text
         return jsonify({'html': html_to_pass})
         
     elif request.method == 'POST':
-        """receive json with keys game_params and user info :
-        user_info contains a dict with keys 'username', 'pk',
-        'email', and 'display_name'.
-        game_params contains a dict with mandatory keys 'game_id' and
-        'next_state' and optional key 'turn_number'
-        game_id is the unique id of the game from the available_games table
-        next_state is a string representing the state of the game after the
-        most recent move
-        turn_number is an integer for the turn number
-        """
-        request = request.get_json()
-        user = User(row=request['user_info'])
-        game_pk = user.game_pk_from_id(request['game_params']['game_id'])
+        # receive json with keys game_params and user info :
+        # user_info contains a dict with keys 'username', 'pk',
+        # 'email', and 'display_name'.
+        # game_params contains a dict with mandatory keys 'game_id' and
+        # 'next_state' and optional key 'turn_number'
+        # game_id is the unique id of the game from the available_games table
+        # next_state is a string representing the state of the game after the
+        # most recent move
+        # turn_number is an integer for the turn number
+        response = request.get_json()
+        user = User(row=response['user_info'])
+        game_pk = user.game_pk_from_id(response['game_params']['game_id'])
         game = GameStatus(pk=game_pk)
         endpoint = game.endpoint
-        turn_number = request.get('turn_number')
-        game.game_state = request['game_params']['next_state']
+        turn_number = response.get('turn_number')
+        game.game_state = response['game_params']['next_state']
         if turn_number:
             game.turn_number = turn_number
         else:
