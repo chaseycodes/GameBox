@@ -19,7 +19,7 @@ const games = [
 
 //Render index at root '/'
 app.get('/', (req, res)=>{
-    res.render('index', { title: 'Hey', message: 'Hello there!' })
+    res.render('index')
 })
 
 //get login info from flask side
@@ -30,19 +30,27 @@ app.post('/login', async function (req, res) {
         body:req.body,
         json: true // Automatically stringifies the body to JSON
     };
-    console.log(req.body)
+    //console.log(req.body)
 
     var returndata;
     var recieverequest = await request(options)
     .then(function (parsedBody) {
-        console.log(parsedBody.user_info); // parsedBody contains the data sent back from the Flask server
+        //console.log(parsedBody.user_info); // parsedBody contains the data sent back from the Flask server
         returndata = parsedBody.user_info; // do something with this data, here I'm assigning it to a variable.
     })
     .catch(function (err) {
         console.log(err);
     });
     
-    res.send(returndata);
+    if(returndata) {
+        //console.log(returndata)
+        res.render('select',returndata)
+
+    } else{
+        res.render('index',{message:"Try again!"})
+
+    }
+   
 });
 
 //get registration from flask back
@@ -59,15 +67,25 @@ app.post('/register', async function (req, res) {
     var returndata;
     var recieverequest = await request(options)
     .then(function (parsedBody) {
-        console.log(parsedBody.status); // parsedBody contains the data sent back from the Flask server
+        //console.log(parsedBody.status); // parsedBody contains the data sent back from the Flask server
         returndata = parsedBody.status; // do something with this data, here I'm assigning it to a variable.
     })
     .catch(function (err) {
         console.log(err);
     });
-    
-    res.send(returndata);
+
+    if(returndata) {
+        //console.log(returndata);
+        var userdata = req.body
+        res.render('index');
+
+    } else{
+        res.send("Try again!!");
+
+    };
 });
+
+
 
 app.post('/', (req, res)=>{
     var usernameLogin = req.body.usernameLogin
@@ -86,6 +104,7 @@ app.post('/', (req, res)=>{
 })
 
 app.get('/select', (req, res)=>{
+<<<<<<< HEAD
 
     const gameList = { game1: { 
                             name: 'Zombie-Dice',
@@ -138,6 +157,9 @@ app.get('/game', (req, res)=>{
 app.post('/start-new', (req, res)=>{
     var usernames = body.req
     console.log(usernames)
+=======
+    res.render('select', {  title: 'Hey' })
+>>>>>>> bfd7bbfb26128e64719f178ba972b6e5cef0068c
 })
 
 app.post('/select', (req, res)=>{
