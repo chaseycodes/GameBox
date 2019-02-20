@@ -37,8 +37,8 @@ html
             center
               each states in saveStates
                 div 
-                  p= states
-                  input(type='radio', name='selectedState', value=states)
+                  p= states['last_move']
+                  input(type='radio', name='selectedState', value=states['playthrough_id'])
           center
             p
               button.readViewMoreBtn(value='Continue') Continue
@@ -54,10 +54,10 @@ html
             center
               div
                 center 
-                  each val, index in roomInfo
+                  for room in roomInfo
                     div 
-                    p= val['invitingUser']+' has invited you for '+val['gamename']
-                    input(type='radio', name='selectedInvite', value= val['pk'])  
+                    p= room['host_username']+' has invited you for '+room['game_name']
+                    input(type='radio', name='selectedState', value= room['playthrough_id'])  
           center
             p
               button.readViewMoreBtn(value='Join') Join

@@ -14,6 +14,15 @@ def get_pk_from_username(username):
     return row['pk']
 
 
+def get_username_from_pk(pk):
+    """select statement to get username from users table based on pk"""
+    with OpenCursor() as cur:
+            SQL = """ SELECT username FROM users WHERE pk = ?; """
+            cur.execute(SQL, (pk,))
+            row = cur.fetchone()
+    return row['username']
+
+
 class User:
     def __init__(self, row={}, username='', password=''):
         if username:

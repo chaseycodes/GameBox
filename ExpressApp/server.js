@@ -188,6 +188,54 @@ app.post('/select', async function (req, res) {
 
 
 
+app.post('/continue', async function (req, res) {
+    sess= req.session;
+    console.log(sess.display_name);
+    console.log(sess.pk)
+    console.log("Game")
+    console.log(req.body.selectedState)
+
+    var sendata = { "game_id":req.body.selectedState,
+    "user_info":{
+        "display_name": sess.display_name,
+        "email":sess.email,
+        "pk":sess.pk,
+        "username":sess.username }
+    };
+
+    console.log(sendata)
+
+    var options = {
+        method: 'GET',
+        uri: 'http://127.0.0.1:5000/gamepage',
+        body:sendata,
+        json: true 
+    };
+
+    
+    var returndata;
+    var recieverequest = await request(options)
+    .then(function (parsedBody) {
+        returndata = parsedBody.html; // do something with this data, here I'm assigning it to a variable.
+    })
+    .catch(function (err) {
+        console.log(err);
+     });
+    
+    res.send(returndata)
+  
+    //console.log(returndata);
+
+    
+
+    //res.render('game' , { html: returndata });
+
+
+    });
+
+
+
+
   
 
     // var returndata;
@@ -319,26 +367,26 @@ app.get('/start-new', (req, res)=>{
     res.render('start_new', { playerList: players }); 
 })
 
-app.get('/continue', (req, res)=>{
+// app.get('/continue', (req, res)=>{
 
-    // Continue games from a saved state
+//     // Continue games from a saved state
 
-    const saveStates = ['State1', 'State2', 'State3']
+//     const saveStates = ['State1', 'State2', 'State3']
 
-    const roomInfo = { invite1: {
-                            invitingUser: 'chase', 
-                            gamename: 'tictactoe',
-                            pk: '12' 
-                        },
-                        invite2: {
-                            invitingUser: 'henry', 
-                            gamename: 'zombiedice',
-                            pk: '24'
-                        }
-                    }
+//     const roomInfo = { invite1: {
+//                             invitingUser: 'chase', 
+//                             gamename: 'tictactoe',
+//                             pk: '12' 
+//                         },
+//                         invite2: {
+//                             invitingUser: 'henry', 
+//                             gamename: 'zombiedice',
+//                             pk: '24'
+//                         }
+//                     }
 
-    res.render('continue', { saveStates: saveStates, roomInfo: roomInfo  });
-})
+//     res.render('continue', { saveStates: saveStates, roomInfo: roomInfo  });
+// })
 
 app.get('/game', (req, res)=>{
 
@@ -360,10 +408,10 @@ app.post('/select', (req, res)=>{
 
 })
 
-app.post('/continue', (req, res)=>{
-    var states = req.body
-    console.log(states)
-})
+// app.post('/continue', (req, res)=>{
+//     var states = req.body
+//     console.log(states)
+// })
 
 
 app.get('/games', (req, res) =>{

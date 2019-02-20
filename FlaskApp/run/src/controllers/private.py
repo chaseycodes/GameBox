@@ -69,56 +69,71 @@ def continue_list():
         user = User(row=response['user_info'])
         avlb_game_pk = response['game_pk']
         continue_games = user.get_user_active_instances_of_game(avlb_game_pk)
-        save_states = []
-        room_info = []
+        started = []
         for i in range(len(continue_games)):
             if continue_games[i].game_state == 'START':
-                try:
-                    room_info[i]['pk'] = continue_games[i].pk
-                    room_info[i]['game_pk'] = continue_games[i].game_pk
-                    room_info[i]['playthrough_id'] = continue_games[i].playthrough_id
-                    room_info[i]['game_state'] = continue_games[i].game_state
-                    room_info[i]['participant_pk'] = continue_games[i].participant_pk
-                    room_info[i]['turn_order'] = continue_games[i].turn_order
-                    room_info[i]['turn_number'] = continue_games[i].turn_number
-                    room_info[i]['endpoint'] = continue_games[i].get_avlb_game_info()['endpoint']
-                    room_info[i]['last_move'] = continue_games[i].last_move
-                except IndexError:
-                    room_info.append({})
-                    room_info[i]['pk'] = continue_games[i].pk
-                    room_info[i]['game_pk'] = continue_games[i].game_pk
-                    room_info[i]['playthrough_id'] = continue_games[i].playthrough_id
-                    room_info[i]['game_state'] = continue_games[i].game_state
-                    room_info[i]['participant_pk'] = continue_games[i].participant_pk
-                    room_info[i]['turn_order'] = continue_games[i].turn_order
-                    room_info[i]['turn_number'] = continue_games[i].turn_number
-                    room_info[i]['endpoint'] = continue_games[i].get_avlb_game_info()['endpoint']
-                    room_info[i]['last_move'] = continue_games[i].last_move
+                started.append(continue_games[i])
+        continued = []
+        for i in range(len(continue_games)):
+            if continue_games[i].game_state != 'START':
+                continued.append(continue_games[i])
+        save_states = []
+        room_info = []
+        for i in range(len(started)):
+            host_username = get_username_from_pk(continue_games[i].playthrough_id.split('-')[0])
+            try:
+                room_info[i]['pk'] = continue_games[i].pk
+                room_info[i]['game_pk'] = continue_games[i].game_pk
+                room_info[i]['playthrough_id'] = continue_games[i].playthrough_id
+                room_info[i]['game_state'] = continue_games[i].game_state
+                room_info[i]['participant_pk'] = continue_games[i].participant_pk
+                room_info[i]['turn_order'] = continue_games[i].turn_order
+                room_info[i]['turn_number'] = continue_games[i].turn_number
+                room_info[i]['endpoint'] = continue_games[i].get_avlb_game_info()['endpoint']
+                room_info[i]['last_move'] = continue_games[i].last_move
+                room_info[i]['game_name'] = continue_games[i].get_avlb_game_info()['game_name']
+                room_info[i]['host_username'] = host_username
+            except IndexError:
+                room_info.append({})
+                room_info[i]['pk'] = continue_games[i].pk
+                room_info[i]['game_pk'] = continue_games[i].game_pk
+                room_info[i]['playthrough_id'] = continue_games[i].playthrough_id
+                room_info[i]['game_state'] = continue_games[i].game_state
+                room_info[i]['participant_pk'] = continue_games[i].participant_pk
+                room_info[i]['turn_order'] = continue_games[i].turn_order
+                room_info[i]['turn_number'] = continue_games[i].turn_number
+                room_info[i]['endpoint'] = continue_games[i].get_avlb_game_info()['endpoint']
+                room_info[i]['last_move'] = continue_games[i].last_move
+                room_info[i]['game_name'] = continue_games[i].get_avlb_game_info()['game_name']
+                room_info[i]['host_username'] = host_username
 
-            else:
-                try:
-                    save_states[i]['pk'] = continue_games[i].pk
-                    save_states[i]['game_pk'] = continue_games[i].game_pk
-                    save_states[i]['playthrough_id'] = continue_games[i].playthrough_id
-                    save_states[i]['game_state'] = continue_games[i].game_state
-                    save_states[i]['participant_pk'] = continue_games[i].participant_pk
-                    save_states[i]['turn_order'] = continue_games[i].turn_order
-                    save_states[i]['turn_number'] = continue_games[i].turn_number
-                    save_states[i]['endpoint'] = continue_games[i].get_avlb_game_info()['endpoint']
-                    save_states[i]['last_move'] = continue_games[i].last_move
-                except IndexError:
-                    save_states.append({})
-                    save_states[i]['pk'] = continue_games[i].pk
-                    save_states[i]['game_pk'] = continue_games[i].game_pk
-                    save_states[i]['playthrough_id'] = continue_games[i].playthrough_id
-                    save_states[i]['game_state'] = continue_games[i].game_state
-                    save_states[i]['participant_pk'] = continue_games[i].participant_pk
-                    save_states[i]['turn_order'] = continue_games[i].turn_order
-                    save_states[i]['turn_number'] = continue_games[i].turn_number
-                    save_states[i]['endpoint'] = continue_games[i].get_avlb_game_info()['endpoint']
-                    save_states[i]['last_move'] = continue_games[i].last_move
+        for i in range(len(continued)):
+            try:
+                save_states[i]['pk'] = continue_games[i].pk
+                save_states[i]['game_pk'] = continue_games[i].game_pk
+                save_states[i]['playthrough_id'] = continue_games[i].playthrough_id
+                save_states[i]['game_state'] = continue_games[i].game_state
+                save_states[i]['participant_pk'] = continue_games[i].participant_pk
+                save_states[i]['turn_order'] = continue_games[i].turn_order
+                save_states[i]['turn_number'] = continue_games[i].turn_number
+                save_states[i]['endpoint'] = continue_games[i].get_avlb_game_info()['endpoint']
+                save_states[i]['last_move'] = continue_games[i].last_move
+                save_states[i]['game_name'] = continue_games[i].get_avlb_game_info()['game_name']
+                save_states[i]['host_username'] = host_username
+            except IndexError:
+                save_states.append({})
+                save_states[i]['pk'] = continue_games[i].pk
+                save_states[i]['game_pk'] = continue_games[i].game_pk
+                save_states[i]['playthrough_id'] = continue_games[i].playthrough_id
+                save_states[i]['game_state'] = continue_games[i].game_state
+                save_states[i]['participant_pk'] = continue_games[i].participant_pk
+                save_states[i]['turn_order'] = continue_games[i].turn_order
+                save_states[i]['turn_number'] = continue_games[i].turn_number
+                save_states[i]['endpoint'] = continue_games[i].get_avlb_game_info()['endpoint']
+                save_states[i]['last_move'] = continue_games[i].last_move
+                save_states[i]['game_name'] = continue_games[i].get_avlb_game_info()['game_name']
+                save_states[i]['host_username'] = host_username
 
-        print(room_info, save_states)
         return jsonify({'room_info':room_info, 'save_states': save_states})
 
 
@@ -131,7 +146,7 @@ def gamepage():
         # game_id is the unique id of the game from the game_records table
         response = request.get_json()
         user = User(row=response['user_info'])
-        game_pk = user.game_pk_from_id(request['game_id'])
+        game_pk = user.game_pk_from_id(response['game_id'])
         game = GameStatus(pk=game_pk)
         game_state = game.game_state
         turn_order = game.turn_order.split(',')
