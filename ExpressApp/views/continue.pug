@@ -37,8 +37,8 @@ html
             center
               each states in saveStates
                 div 
-                  p= states
-                  input(type='radio', name='selectedState', value=states)
+                  p= states['playthrough_id']
+                  input(type='radio', name='selectedState', value=states['playthrough_id'])
           center
             p
               button.readViewMoreBtn(value='Continue') Continue
@@ -57,7 +57,7 @@ html
                   each val, index in roomInfo
                     div 
                     p= val['invitingUser']+' has invited you for '+val['gamename']
-                    input(type='radio', name='selectedInvite', value= val['pk'])  
+                    input(type='radio', name='selectedInvite', value= val['gameID'])  
           center
             p
               button.readViewMoreBtn(value='Join') Join

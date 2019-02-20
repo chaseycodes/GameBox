@@ -34,6 +34,14 @@ html
       padding: 0;
       box-sizing: border-box;
       }
+      img-button {
+      position: fixed;
+      left: 50%;
+      bottom: 0px;
+      transform: translate(-50%, -50%);
+      margin: 0 auto;
+      margin-left: 250px;
+      }
       body {
       background-color: black;
       font-family: Arial, Helvetica, sans-serif;
@@ -117,3 +125,10 @@ html
         })
     bg-ele
       .rectangle
+    div
+      form(method='POST', action='/game')
+      img-button
+        a(href='/select')
+          img(type="image" src='home_button.png' width="16%")
+        a(href='/continue')
+          img(type="image" src='goback_button.png' width="16%")

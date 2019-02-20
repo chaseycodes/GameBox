@@ -4,9 +4,42 @@ var http = require('http').Server(app)
 var io = require('socket.io')(http)
 const bodyParser = require('body-parser');
 var request = require('request-promise');
+var mongo = require('mongodb').MongoClient;
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+//connect to  MONGO
+var url = 'mongodb://localhost:27017/mongochat'
+mongo.connect(url, { useNewUrlParser: true }, function(err,db){
+    if(err){
+        throw err;
+    }
+
+    console.log('MongoDB Connected......... *8====D')
+
+    //Create Socket for Chat Connection
+    io.on('connection', ()=>{
+        let chat = db.collection('chats');
+
+        //Function to send status
+        sendStatus = (s)=>{
+            socket.emit('status', s);
+        }
+
+        chat.find().limit(100).sort({_id:1}).toArray((err, res)=>{
+            if(err){
+                throw err;
+            }
+
+            //Emit messages
+            socket.emit('output', res);
+        })
+
+        i
+    })
+
+});
 
 app.set('views', './views')
 app.set('view engine', 'pug')
@@ -104,7 +137,6 @@ app.post('/', (req, res)=>{
 })
 
 app.get('/select', (req, res)=>{
-<<<<<<< HEAD
 
     const gameList = { game1: { 
                             name: 'Zombie-Dice',
@@ -132,17 +164,31 @@ app.get('/continue', (req, res)=>{
 
     // Continue games from a saved state
 
-    const saveStates = ['State1', 'State2', 'State3']
+    const saveStates = [ { game_pk: "1", 
+                           playthrough_id: "uniqueID", 
+                           game_state: "gameState",
+                           participant_pk: "2",
+                           turn_order: "2",
+                           turn_number: "4",
+                           last_move: "11232141"  },
+                         { game_pk: "1", 
+                           playthrough_id: "uniqueID2", 
+                           game_state: "gameState",
+                           participant_pk: "2",
+                           turn_order: "2",
+                           turn_number: "4",
+                           last_move: "10922" }
+                        ]
 
     const roomInfo = { invite1: {
                             invitingUser: 'chase', 
                             gamename: 'tictactoe',
-                            pk: '12' 
+                            gameID: '12bgjd',
                         },
                         invite2: {
                             invitingUser: 'henry', 
                             gamename: 'zombiedice',
-                            pk: '24'
+                            gameID: '24dwdad'
                         }
                     }
 
@@ -157,17 +203,11 @@ app.get('/game', (req, res)=>{
 app.post('/start-new', (req, res)=>{
     var usernames = body.req
     console.log(usernames)
-=======
-    res.render('select', {  title: 'Hey' })
->>>>>>> bfd7bbfb26128e64719f178ba972b6e5cef0068c
 })
 
 app.post('/select', (req, res)=>{
-    var toggleValue = req.body.switch
-    var gameName = req.body.game
+
     console.log(req.body)
-    console.log(toggleValue)
-    console.log(gameName)
 
 })
 
@@ -182,16 +222,16 @@ app.get('/games', (req, res) =>{
 })
 
 
-//Create Socket for Chat Connection
-io.on('connection', (socket)=>{
-    socket.on('chat', (msg)=>{
-        io.emit('chat', msg)
-    })
-})
+// //Create Socket for Chat Connection
+// io.on('connection', (socket)=>{
+//     socket.on('chat', (msg)=>{
+//         io.emit('chat', msg)
+//     })
+// })
 
-io.on('disconnect', function(){
-    console.log('User Disconnected')
-})
+// io.on('disconnect', function(){
+//     console.log('User Disconnected')
+// })
 
 app.use(express.static('public'))
 
