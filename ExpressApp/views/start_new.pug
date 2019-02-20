@@ -10,7 +10,7 @@ html
       color: white
       }
   body
-    form(method='POST', action='/select')
+    form(method='POST', action='/game_start')
       div
         img.center(src='create_room.png', style='width:50%')
       div
@@ -20,7 +20,7 @@ html
             input(
               type='text', 
               placeholder='Enter Username', 
-              name=player
+              name='playerNames'
               )
       button creategame
     script.

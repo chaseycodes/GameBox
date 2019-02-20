@@ -14,6 +14,15 @@ def get_pk_from_username(username):
     return row['pk']
 
 
+def get_username_from_pk(pk):
+    """select statement to get username from users table based on pk"""
+    with OpenCursor() as cur:
+            SQL = """ SELECT username FROM users WHERE pk = ?; """
+            cur.execute(SQL, (pk,))
+            row = cur.fetchone()
+    return row['username']
+
+
 class User:
     def __init__(self, row={}, username='', password=''):
         if username:
@@ -76,6 +85,16 @@ class User:
             SQL = """ SELECT * FROM game_records WHERE participant_pk = ? AND
             game_state NOT LIKE 'WIN -%' ORDER BY game_pk ASC;"""
             cur.execute(SQL, (self.pk,))
+            rows = cur.fetchall()
+        return [GameStatus(game_row) for game_row in rows]
+
+
+    def get_user_active_instances_of_game(self, avlb_game_pk):
+        """get a list of the user's games that are not finished"""
+        with OpenCursor() as cur:
+            SQL = """ SELECT * FROM game_records WHERE participant_pk = ? AND
+            game_state NOT LIKE 'WIN -%' AND game_pk = ?;"""
+            cur.execute(SQL, (self.pk, avlb_game_pk))
             rows = cur.fetchall()
         return [GameStatus(game_row) for game_row in rows]
 
@@ -161,26 +180,27 @@ class GameStatus:
         self.turn_order = row.get('turn_order')
         self.turn_number = row.get('turn_number')
         self.endpoint = self.get_avlb_game_info()['endpoint']
+        self.last_move = row.get('last_move')
 
 
     def save(self):
         if self:
             with OpenCursor() as cur:
                 SQL = """ UPDATE game_records SET 
-                          game_state = ?,  turn_number = ?
+                          game_state = ?,  turn_number = ?, last_move = ?
                           WHERE playthrough_id=?; """
-                values = (self.game_state, self.turn_number, 
+                values = (self.game_state, self.turn_number, time(),
                           self.playthrough_id)
                 cur.execute(SQL, values)
         else:
             with OpenCursor() as cur:
                 SQL = """ INSERT INTO game_records (
                           game_pk, playthrough_id, game_state,
-                          participant_pk, turn_order, turn_number)
-                          VALUES (?, ?, ?, ?, ?, ?); """
+                          participant_pk, turn_order, turn_number, last_move)
+                          VALUES (?, ?, ?, ?, ?, ?, ?); """
                 values = (self.game_pk, self.playthrough_id,
                           self.game_state, self.participant_pk, 
-                          self.turn_order, self.turn_number)
+                          self.turn_order, self.turn_number, time())
                 cur.execute(SQL, values)
                 self.pk = cur.lastrowid
 

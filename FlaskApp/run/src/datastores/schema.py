@@ -55,6 +55,7 @@ def run(dbname="game.db"):
         participant_pk INTEGER,
         turn_order VARCHAR,
         turn_number INTEGER,
+        last_move FLOAT,
         FOREIGN KEY(participant_pk) REFERENCES users(pk),
         FOREIGN KEY(game_pk) REFERENCES available_games(pk)
         );"""

@@ -37,7 +37,11 @@ html
             center
               each states in saveStates
                 div 
+<<<<<<< HEAD
                   p= states['playthrough_id']
+=======
+                  p= states['last_move']
+>>>>>>> 14639b1ca81f34aca79876733e4a425bb296c963
                   input(type='radio', name='selectedState', value=states['playthrough_id'])
           center
             p
@@ -54,10 +58,15 @@ html
             center
               div
                 center 
-                  each val, index in roomInfo
+                  for room in roomInfo
                     div 
+<<<<<<< HEAD
                     p= val['invitingUser']+' has invited you for '+val['gamename']
                     input(type='radio', name='selectedInvite', value= val['gameID'])  
+=======
+                    p= room['host_username']+' has invited you for '+room['game_name']
+                    input(type='radio', name='selectedState', value= room['playthrough_id'])  
+>>>>>>> 14639b1ca81f34aca79876733e4a425bb296c963
           center
             p
               button.readViewMoreBtn(value='Join') Join
